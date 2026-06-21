@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Platform Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #0b1120; color: #e2e8f0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+a { color: #38bdf8; text-decoration: none; }
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Login */
+.login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; width: 100%; padding: 1rem; }
+.login-box { background: #131c31; border: 1px solid #1e293b; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 400px; }
+.login-box h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.25rem; }
+.login-box .sub { color: #94a3b8; font-size: 0.875rem; margin-bottom: 1.75rem; }
+.login-box label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.375rem; }
+.login-box input { width: 100%; padding: 0.75rem 1rem; background: #0b1120; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; font-size: 0.9rem; outline: none; margin-bottom: 1rem; transition: border-color 0.2s; }
+.login-box input:focus { border-color: #38bdf8; }
+.login-box button { width: 100%; padding: 0.75rem; background: #38bdf8; color: #0b1120; font-weight: 600; border: none; border-radius: 8px; font-size: 0.95rem; cursor: pointer; transition: opacity 0.2s; }
+.login-box button:hover { opacity: 0.85; }
+.login-error { color: #ef4444; font-size: 0.8rem; margin-top: -0.5rem; margin-bottom: 0.75rem; display: none; }
+
+/* Main layout */
+.app { display: none; width: 100%; min-height: 100vh; background: #0b1120; }
+.app-inner { display: grid; grid-template-columns: 280px 1fr 280px; min-height: 100vh; max-width: 1400px; margin: 0 auto; gap: 1.5rem; padding: 1.5rem; }
+
+/* Top bar for app (back link) */
+.app-topbar { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.5rem; border-bottom: 1px solid #1e293b; margin-bottom: 0.5rem; }
+.app-topbar h1 { font-size: 1.25rem; font-weight: 700; }
+.app-topbar h1 i { color: #38bdf8; margin-right: 0.5rem; }
+.app-topbar button { background: none; border: 1px solid #1e293b; color: #94a3b8; padding: 0.4rem 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
+.app-topbar button:hover { color: #ef4444; border-color: #ef4444; }
+
+/* Left sidebar - Profile */
+.left-sidebar { background: #131c31; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; height: fit-content; position: sticky; top: 1.5rem; }
+.profile-card { text-align: center; }
+.profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #38bdf8, #6366f1); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: #fff; margin: 0 auto 0.75rem; }
+.profile-name { font-size: 1.1rem; font-weight: 600; }
+.profile-handle { color: #64748b; font-size: 0.85rem; margin-bottom: 0.75rem; }
+.profile-bio { font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem; line-height: 1.4; }
+.profile-stats { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; }
+.profile-stat { text-align: center; }
+.profile-stat .num { font-size: 1.1rem; font-weight: 700; }
+.profile-stat .label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+.edit-profile-btn { width: 100%; padding: 0.5rem; background: transparent; border: 1px solid #1e293b; color: #e2e8f0; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 500; transition: all 0.2s; }
+.edit-profile-btn:hover { border-color: #38bdf8; color: #38bdf8; }
+
+/* Main feed */
+.main-feed { min-width: 0; }
+
+/* Create post */
+.create-post { background: #131c31; border: 1px solid #1e293b; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.create-post textarea { width: 100%; background: #0b1120; border: 1px solid #1e293b; border-radius: 8px; color: #e2e8f0; padding: 0.75rem; font-size: 0.875rem; font-family: inherit; resize: none; outline: none; min-height: 70px; transition: border-color 0.2s; }
+.create-post textarea:focus { border-color: #38bdf8; }
+.create-post .post-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem; }
+.create-post .char-count { color: #64748b; font-size: 0.75rem; }
+.create-post .post-btn { padding: 0.5rem 1.25rem; background: #38bdf8; color: #0b1120; border: none; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: opacity 0.2s; }
+.create-post .post-btn:hover { opacity: 0.85; }
+.create-post .post-btn:disabled { opacity: 0.4; cursor: default; }
+
+/* Post */
+.post { background: #131c31; border: 1px solid #1e293b; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
+.post-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.post-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: #fff; flex-shrink: 0; }
+.post-user { font-weight: 600; font-size: 0.9rem; }
+.post-time { color: #64748b; font-size: 0.75rem; margin-left: auto; }
+.post-content { font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.75rem; word-wrap: break-word; }
+.post-actions-bar { display: flex; gap: 1.5rem; padding-top: 0.75rem; border-top: 1px solid #1e293b; }
+.post-action { display: flex; align-items: center; gap: 0.375rem; color: #94a3b8; cursor: pointer; font-size: 0.85rem; transition: color 0.2s; background: none; border: none; padding: 0; font-family: inherit; }
+.post-action:hover { color: #e2e8f0; }
+.post-action.liked { color: #ef4444; }
+.post-action.liked i { font-weight: 900; }
+.post-comments { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #1e293b; }
+.post-comments.open { display: block; }
+.comment { display: flex; gap: 0.625rem; padding: 0.5rem 0; }
+.comment-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.6rem; color: #fff; flex-shrink: 0; }
+.comment-body { flex: 1; }
+.comment-user { font-weight: 600; font-size: 0.8rem; }
+.comment-text { font-size: 0.8rem; color: #cbd5e1; margin-top: 0.125rem; }
+.comment-time { font-size: 0.65rem; color: #64748b; }
+
+/* Right sidebar */
+.right-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+.sidebar-card { background: #131c31; border: 1px solid #1e293b; border-radius: 12px; padding: 1.25rem; }
+.sidebar-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+
+/* Online friends */
+.online-friend { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; }
+.online-friend .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+.online-friend .of-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem; color: #fff; }
+.online-friend .of-name { font-size: 0.85rem; font-weight: 500; }
+.online-friend .of-status { font-size: 0.7rem; color: #22c55e; margin-left: auto; }
+
+/* Trending */
+.trending-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; cursor: pointer; transition: color 0.2s; }
+.trending-item:hover { color: #38bdf8; }
+.trending-item i { color: #38bdf8; font-size: 0.9rem; width: 1.25rem; }
+.trending-item .tag { font-size: 0.85rem; font-weight: 600; }
+.trending-item .count { font-size: 0.7rem; color: #64748b; margin-left: auto; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .app-inner { grid-template-columns: 1fr; }
+  .left-sidebar, .right-sidebar { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== LOGIN ========== -->
+<div id="loginPage" class="login-page fade-in">
+  <div class="login-box">
+    <h1><i class="fas fa-hashtag" style="color:#38bdf8;margin-right:8px;"></i>Connect</h1>
+    <p class="sub">Log in to your social feed</p>
+    <label>Username</label>
+    <input type="text" id="loginUser" placeholder="username" value="johndoe">
+    <label>Password</label>
+    <input type="password" id="loginPass" placeholder="••••••••" value="pass123">
+    <div class="login-error" id="loginError">Invalid username or password</div>
+    <button onclick="handleLogin()">Log In</button>
+    <p style="margin-top:1rem;text-align:center;font-size:0.8rem;color:#64748b;">Demo: johndoe / pass123</p>
+  </div>
+</div>
+
+<!-- ========== APP ========== -->
+<div id="app" class="app">
+  <div class="app-inner">
+
+    <!-- Top bar -->
+    <div class="app-topbar">
+      <h1><i class="fas fa-hashtag"></i>Connect</h1>
+      <button onclick="handleLogout()">Log Out</button>
+    </div>
+
+    <!-- Left Sidebar -->
+    <aside class="left-sidebar">
+      <div class="profile-card">
+        <div class="profile-avatar">JD</div>
+        <div class="profile-name">John Doe</div>
+        <div class="profile-handle">@johndoe</div>
+        <div class="profile-bio">Full-stack developer &amp; UI designer. Building cool stuff on the web.</div>
+        <div class="profile-stats">
+          <div class="profile-stat"><div class="num">1,234</div><div class="label">Followers</div></div>
+          <div class="profile-stat"><div class="num">567</div><div class="label">Following</div></div>
+        </div>
+        <button class="edit-profile-btn" onclick="alert('Edit Profile modal would open here.')">Edit Profile</button>
+      </div>
+    </aside>
+
+    <!-- Main Feed -->
+    <main class="main-feed" id="mainFeed">
+
+      <!-- Create Post -->
+      <div class="create-post">
+        <textarea id="postTextarea" placeholder="What's on your mind?" maxlength="500" oninput="updateCharCount()"></textarea>
+        <div class="post-actions">
+          <span class="char-count"><span id="charCount">0</span>/500</span>
+          <button class="post-btn" id="postBtn" onclick="createPost()">Post</button>
+        </div>
+      </div>
+
+      <!-- Posts Container -->
+      <div id="postsContainer"></div>
+
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="right-sidebar">
+      <div class="sidebar-card">
+        <h4><i class="fas fa-circle" style="color:#22c55e;font-size:0.6rem;"></i> Online Now</h4>
+        <div class="online-friend"><span class="dot"></span><span class="of-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);">AL</span><span class="of-name">Alice L.</span><span class="of-status">Active</span></div>
+        <div class="online-friend"><span class="dot"></span><span class="of-avatar" style="background:linear-gradient(135deg,#34d399,#10b981);">BM</span><span class="of-name">Bob M.</span><span class="of-status">Active</span></div>
+        <div class="online-friend"><span class="dot"></span><span class="of-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">CJ</span><span class="of-name">Carol J.</span><span class="of-status">Active</span></div>
+        <div class="online-friend"><span class="dot"></span><span class="of-avatar" style="background:linear-gradient(135deg,#818cf8,#6366f1);">DW</span><span class="of-name">David W.</span><span class="of-status">Active</span></div>
+      </div>
+      <div class="sidebar-card">
+        <h4><i class="fas fa-fire" style="color:#fb923c;"></i> Trending Topics</h4>
+        <div class="trending-item"><i class="fab fa-react"></i><span class="tag">#ReactJS</span><span class="count">12.4K</span></div>
+        <div class="trending-item"><i class="fas fa-code"></i><span class="tag">#WebDev</span><span class="count">9.8K</span></div>
+        <div class="trending-item"><i class="fas fa-terminal"></i><span class="tag">#OpenSource</span><span class="count">6.2K</span></div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script>
+/* ========== DATA ========== */
+const avatarColors = [
+  'linear-gradient(135deg,#38bdf8,#6366f1)',
+  'linear-gradient(135deg,#f472b6,#ec4899)',
+  'linear-gradient(135deg,#34d399,#10b981)',
+  'linear-gradient(135deg,#fbbf24,#f59e0b)',
+  'linear-gradient(135deg,#a78bfa,#8b5cf6)',
+  'linear-gradient(135deg,#fb923c,#f97316)',
+  'linear-gradient(135deg,#22d3ee,#06b6d4)',
+];
+
+let posts = [
+  {
+    id: 1,
+    username: 'Sarah',
+    handle: '@sarah_dev',
+    content: 'Just finished building a new React component library! 🚀',
+    time: '2h ago',
+    liked: false,
+    likes: 12,
+    commentsOpen: false,
+    comments: [
+      { user: 'Mike R.', text: 'That\'s awesome! Would love to check it out.', time: '1h ago' },
+      { user: 'Emma L.', text: 'Nice work! What stack did you use?', time: '45m ago' },
+      { user: 'Alex C.', text: 'Looks clean! Got a repo link?', time: '30m ago' },
+      { user: 'John D.', text: 'Great job Sarah!', time: '15m ago' },
+    ],
+    colorIdx: 0,
+  },
+  {
+    id: 2,
+    username: 'Mike',
+    handle: '@mike_tech',
+    content: 'Anyone interested in a hackathon this weekend?',
+    time: '4h ago',
+    liked: false,
+    likes: 8,
+    commentsOpen: false,
+    comments: [
+      { user: 'Sarah K.', text: 'I\'m in! What\'s the theme?', time: '3h ago' },
+      { user: 'David W.', text: 'Sounds fun, count me in!', time: '2h ago' },
+    ],
+    colorIdx: 1,
+  },
+  {
+    id: 3,
+    username: 'Emma',
+    handle: '@emma_designs',
+    content: 'Check out my new portfolio site! Link in bio ✨',
+    time: '6h ago',
+    liked: false,
+    likes: 24,
+    commentsOpen: false,
+    comments: [
+      { user: 'John D.', text: 'Looks amazing Emma! The animations are smooth.', time: '5h ago' },
+      { user: 'Alice L.', text: 'Love the design system!', time: '4h ago' },
+      { user: 'Bob M.', text: 'Inspiring work 🔥', time: '3h ago' },
+      { user: 'Carol J.', text: 'The color palette is gorgeous', time: '2h ago' },
+      { user: 'Sarah K.', text: 'Would love a case study on this!', time: '1h ago' },
+      { user: 'Mike R.', text: 'Clean and professional 👌', time: '45m ago' },
+      { user: 'Emma L.', text: 'You\'re so talented!', time: '30m ago' },
+    ],
+    colorIdx: 2,
+  },
+];
+
+let nextId = 4;
+let currentUser = { name: 'You', handle: '@johndoe', colorIdx: 6 };
+
+/* ========== RENDER ========== */
+function renderPosts() {
+  const container = document.getElementById('postsContainer');
+  container.innerHTML = posts.map(p => {
+    const color = avatarColors[p.colorIdx];
+    const initials = p.username.split(' ').map(n => n[0]).join('').slice(0, 2);
+    const likeClass = p.liked ? 'post-action liked' : 'post-action';
+    const heartIcon = p.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    const commentsOpenClass = p.commentsOpen ? 'post-comments open' : 'post-comments';
+    return `
+      <div class="post fade-in" data-id="${p.id}">
+        <div class="post-header">
+          <div class="post-avatar" style="background:${color}">${initials}</div>
+          <div class="post-user">${p.username}</div>
+          <div class="post-time">${p.time}</div>
+        </div>
+        <div class="post-content">${p.content}</div>
+        <div class="post-actions-bar">
+          <button class="${likeClass}" onclick="toggleLike(${p.id})">
+            <i class="${heartIcon}"></i> <span>${p.likes}</span>
+          </button>
+          <button class="post-action" onclick="toggleComments(${p.id})">
+            <i class="fa-regular fa-comment"></i> <span>${p.comments.length}</span>
+          </button>
+        </div>
+        <div class="${commentsOpenClass}">
+          ${p.commentsOpen ? p.comments.map(c => {
+            const ci = c.user.split(' ').map(n => n[0]).join('').slice(0, 2);
+            const cc = avatarColors[p.colorIdx < 6 ? p.colorIdx + 1 : 0];
+            return `<div class="comment"><div class="comment-avatar" style="background:${cc}">${ci}</div><div class="comment-body"><div class="comment-user">${c.user}</div><div class="comment-text">${c.text}</div><div class="comment-time">${c.time}</div></div></div>`;
+          }).join('') : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ========== LIKE ========== */
+function toggleLike(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  p.liked = !p.liked;
+  p.likes += p.liked ? 1 : -1;
+  renderPosts();
+}
+
+/* ========== COMMENTS ========== */
+function toggleComments(id) {
+  const p = posts.find(x => x.id === id);
+  if (!p) return;
+  p.commentsOpen = !p.commentsOpen;
+  renderPosts();
+}
+
+/* ========== CREATE POST ========== */
+function updateCharCount() {
+  const len = document.getElementById('postTextarea').value.length;
+  document.getElementById('charCount').textContent = len;
+  document.getElementById('postBtn').disabled = len === 0;
+}
+
+function createPost() {
+  const textarea = document.getElementById('postTextarea');
+  const text = textarea.value.trim();
+  if (!text) return;
+  const newPost = {
+    id: nextId++,
+    username: currentUser.name,
+    handle: currentUser.handle,
+    content: text,
+    time: 'just now',
+    liked: false,
+    likes: 0,
+    commentsOpen: false,
+    comments: [],
+    colorIdx: currentUser.colorIdx,
+  };
+  posts.unshift(newPost);
+  textarea.value = '';
+  updateCharCount();
+  renderPosts();
+}
+
+/* ========== AUTH ========== */
+function handleLogin() {
+  const user = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+  if (user === 'johndoe' && pass === 'pass123') {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    renderPosts();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function handleLogout() {
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginError').style.display = 'none';
+}
+
+/* ========== ENTER KEY ========== */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+  document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+  document.getElementById('postTextarea').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); createPost(); }
+  });
+  updateCharCount();
+});
+</script>
+</body>
+</html>

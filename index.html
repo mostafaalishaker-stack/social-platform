@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Social Platform — Project Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b1120;color:#e2e8f0;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
+.page{max-width:1100px;margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration:none}
+
+/* Back link */
+.back-link{display:inline-flex;align-items:center;gap:8px;margin:32px 0 0;padding:8px 16px;color:#64748b;font-size:14px;font-weight:500;border:1px solid #1e293b;border-radius:8px;transition:all .2s}
+.back-link:hover{color:#e2e8f0;border-color:#334155;background:#1a2332}
+.back-link i{font-size:12px}
+
+/* Hero */
+.hero{text-align:center;padding:64px 0 48px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(236,72,153,0.12);border:1px solid rgba(236,72,153,0.25);border-radius:50px;color:#f472b6;font-size:13px;font-weight:500;margin-bottom:24px}
+.hero-badge i{font-size:12px}
+.hero-title{font-size:clamp(36px,6vw,64px);font-weight:800;line-height:1.1;margin-bottom:20px;background:linear-gradient(135deg,#ec4899,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-desc{max-width:680px;margin:0 auto;font-size:18px;color:#94a3b8;line-height:1.7}
+.hero-cta{margin-top:28px;display:inline-flex;align-items:center;gap:10px;padding:12px 28px;background:linear-gradient(135deg,#ec4899,#db2777);color:#fff;border-radius:10px;font-weight:600;font-size:15px;transition:transform .2s,box-shadow .2s}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(236,72,153,0.35)}
+.hero-cta i{font-size:14px}
+
+/* Section titles */
+.section-title{font-size:28px;font-weight:700;margin-bottom:8px;text-align:center}
+.section-sub{text-align:center;color:#64748b;font-size:15px;margin-bottom:40px}
+.section{padding:60px 0}
+
+/* Mockup */
+.mockup-wrap{background:#0d1421;border:1px solid #1e293b;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);margin-bottom:8px}
+.mockup-chrome{display:flex;align-items:center;gap:10px;padding:12px 18px;background:#1a2332;border-bottom:1px solid #1e293b}
+.chrome-dots{display:flex;gap:7px}
+.chrome-dot{width:12px;height:12px;border-radius:50%}
+.chrome-dot.r{background:#ef4444}
+.chrome-dot.y{background:#eab308}
+.chrome-dot.g{background:#22c55e}
+.chrome-url{flex:1;text-align:center;background:#0f172a;color:#64748b;font-size:13px;padding:5px 12px;border-radius:6px;max-width:300px;margin:0 auto;font-weight:500}
+.chrome-btn{color:#475569;font-size:14px}
+
+/* App layout - social platform */
+.mockup-app{display:flex;flex-direction:column;min-height:520px}
+.app-topnav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:54px;background:#111827;border-bottom:1px solid #1e293b;flex-shrink:0}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px}
+.nav-logo .logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#ec4899,#f43f5e);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff}
+.nav-right{display:flex;align-items:center;gap:18px}
+.nav-icon{color:#64748b;font-size:16px;cursor:default}
+.nav-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f43f5e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;cursor:default}
+.app-body{display:flex;flex:1;min-height:0}
+
+/* Left sidebar */
+.left-sidebar{width:240px;padding:20px;border-right:1px solid #1e293b;flex-shrink:0}
+.profile-card{background:#1a2332;border:1px solid #2d3748;border-radius:12px;padding:20px;text-align:center}
+.profile-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#f43f5e);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#fff;font-weight:600}
+.profile-name{font-size:16px;font-weight:600}
+.profile-handle{font-size:13px;color:#64748b;margin-bottom:10px}
+.profile-bio{font-size:13px;color:#94a3b8;margin-bottom:14px;line-height:1.5}
+.profile-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;border-top:1px solid #1e293b;padding-top:14px}
+.profile-stat{text-align:center}
+.profile-stat .num{font-size:16px;font-weight:700}
+.profile-stat .label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+
+/* Main feed */
+.main-feed{flex:1;padding:20px;overflow-y:auto}
+.feed-tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid #1e293b}
+.feed-tab{padding:10px 20px;font-size:14px;font-weight:500;color:#64748b;cursor:default;border-bottom:2px solid transparent;transition:all .15s}
+.feed-tab.active{color:#f472b6;border-bottom-color:#ec4899}
+.post-card{background:#1a2332;border:1px solid #2d3748;border-radius:12px;padding:18px;margin-bottom:14px;transition:all .2s}
+.post-card:hover{border-color:#3b4a5f}
+.post-header{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.post-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;flex-shrink:0}
+.post-user{flex:1}
+.post-user .name{font-size:14px;font-weight:600}
+.post-user .time{font-size:12px;color:#475569}
+.post-content{font-size:14px;color:#cbd5e1;margin-bottom:12px;line-height:1.6}
+.post-actions{display:flex;align-items:center;gap:20px;padding-top:12px;border-top:1px solid #1e293b}
+.post-action{display:flex;align-items:center;gap:6px;font-size:13px;color:#64748b;cursor:default;transition:color .15s}
+.post-action:hover{color:#ec4899}
+.post-action.liked{color:#ec4899}
+.post-action i{font-size:15px}
+
+/* Right sidebar */
+.right-sidebar{width:260px;padding:20px;border-left:1px solid #1e293b;flex-shrink:0}
+.sidebar-panel{background:#1a2332;border:1px solid #2d3748;border-radius:12px;padding:16px;margin-bottom:16px}
+.panel-title{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#64748b;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.panel-title span{background:#ec4899;color:#fff;font-size:10px;padding:1px 7px;border-radius:50px;font-weight:600;text-transform:none;letter-spacing:0}
+.online-user{display:flex;align-items:center;gap:10px;padding:6px 0}
+.online-user .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0}
+.online-user .uname{font-size:13px;font-weight:500;flex:1}
+.online-user .status{font-size:11px;color:#475569}
+
+/* Chat */
+.chat-messages{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:120px;overflow:hidden}
+.chat-msg{font-size:13px;padding:8px 12px;border-radius:10px;max-width:85%}
+.chat-msg.other{background:#1e293b;color:#94a3b8;align-self:flex-start}
+.chat-msg.self{background:rgba(236,72,153,0.15);color:#f472b6;align-self:flex-end}
+.chat-input-wrap{display:flex;align-items:center;gap:8px;background:#0f172a;border:1px solid #2d3748;border-radius:8px;padding:6px 10px}
+.chat-input-wrap input{flex:1;background:none;border:none;color:#e2e8f0;font-size:13px;font-family:'Inter',sans-serif;outline:none}
+.chat-input-wrap input::placeholder{color:#475569}
+.chat-input-wrap button{background:linear-gradient(135deg,#ec4899,#db2777);border:none;color:#fff;width:28px;height:28px;border-radius:6px;cursor:default;font-size:12px}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.feature-card{background:#1a2332;border:1px solid #2d3748;border-radius:12px;padding:24px;transition:all .2s}
+.feature-card:hover{border-color:#ec4899;transform:translateY(-2px);box-shadow:0 8px 24px rgba(236,72,153,0.1)}
+.feature-icon{width:42px;height:42px;border-radius:10px;background:rgba(236,72,153,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;color:#f472b6;margin-bottom:14px}
+.feature-card h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.feature-card p{font-size:14px;color:#94a3b8;line-height:1.6}
+
+/* Tech stack */
+.tech-wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.tech-tag{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:50px;font-size:13px;font-weight:500;transition:all .2s}
+.tech-tag:hover{transform:translateY(-2px)}
+.tech-tag i{font-size:12px}
+
+/* Architecture */
+.code-block{background:#0d1421;border:1px solid #1e293b;border-radius:12px;overflow:hidden}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;background:#1a2332;border-bottom:1px solid #1e293b;font-size:13px;color:#64748b}
+.code-body{padding:20px 24px;font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto;color:#cbd5e1}
+.code-body .tree-dir{color:#f472b6;font-weight:500}
+.code-body .tree-file{color:#94a3b8}
+.code-body .tree-pipe{color:#334155}
+.code-body .tree-comment{color:#475569;font-style:italic}
+
+/* Snippet */
+.snippet-block{background:#0d1421;border:1px solid #1e293b;border-radius:12px;overflow:hidden}
+.snippet-header{display:flex;align-items:center;gap:10px;padding:10px 18px;background:#1a2332;border-bottom:1px solid #1e293b;font-size:13px;color:#64748b}
+.snippet-header i{color:#22c55e}
+.snippet-body{padding:20px 24px;font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:14px;line-height:2;overflow-x:auto}
+.snippet-body .comment{color:#475569;font-style:italic}
+.snippet-body .cmd{color:#e2e8f0}
+.snippet-body .prompt{color:#22c55e}
+.snippet-body .output{color:#64748b}
+
+/* Footer */
+.footer{text-align:center;padding:40px 0 56px;border-top:1px solid #1e293b;margin-top:20px}
+.footer-link{display:inline-flex;align-items:center;gap:10px;color:#64748b;font-size:15px;transition:color .2s}
+.footer-link:hover{color:#e2e8f0}
+.footer-link i{font-size:20px}
+.footer-copy{font-size:13px;color:#475569;margin-top:12px}
+
+/* Responsive */
+@media(max-width:768px){
+  .page{padding:0 16px}
+  .hero{padding:40px 0 32px}
+  .hero-desc{font-size:16px}
+  .section{padding:40px 0}
+  .section-title{font-size:24px}
+  .features-grid{grid-template-columns:1fr}
+  .app-body{flex-direction:column}
+  .left-sidebar{width:100%;border-right:none;border-bottom:1px solid #1e293b}
+  .right-sidebar{width:100%;border-left:none;border-top:1px solid #1e293b}
+  .code-body,.snippet-body{font-size:12px;padding:14px 16px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<a href="#" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+
+<section class="hero">
+  <div class="hero-badge"><i class="fas fa-bolt"></i> React + Socket.io + Redis</div>
+  <h1 class="hero-title">Social Platform</h1>
+  <p class="hero-desc">A real-time social networking platform with live feed updates, instant messaging, post interactions, and responsive design — powered by WebSockets for seamless communication.</p>
+  <a href="#" class="hero-cta"><i class="fas fa-eye"></i> View Live Demo</a>
+</section>
+
+<section class="section">
+  <div class="mockup-wrap">
+    <div class="mockup-chrome">
+      <div class="chrome-dots">
+        <span class="chrome-dot r"></span>
+        <span class="chrome-dot y"></span>
+        <span class="chrome-dot g"></span>
+      </div>
+      <div class="chrome-url"><i class="fas fa-lock" style="font-size:10px;margin-right:6px;color:#22c55e"></i> app.social-platform.io</div>
+      <div class="chrome-btn"><i class="fas fa-ellipsis-h"></i></div>
+    </div>
+    <div class="mockup-app">
+      <div class="app-topnav">
+        <div class="nav-logo">
+          <div class="logo-icon"><i class="fas fa-hashtag"></i></div>
+          <span>Social</span>
+        </div>
+        <div class="nav-right">
+          <i class="fas fa-magnifying-glass nav-icon"></i>
+          <i class="fas fa-bell nav-icon"></i>
+          <div class="nav-avatar">SJ</div>
+        </div>
+      </div>
+      <div class="app-body">
+        <div class="left-sidebar">
+          <div class="profile-card">
+            <div class="profile-avatar">SJ</div>
+            <div class="profile-name">Sarah Johnson</div>
+            <div class="profile-handle">@sarahj</div>
+            <div class="profile-bio">Full-stack developer &amp; designer. Building cool things on the internet.</div>
+            <div class="profile-stats">
+              <div class="profile-stat"><div class="num">42</div><div class="label">Posts</div></div>
+              <div class="profile-stat"><div class="num">1.2K</div><div class="label">Likes</div></div>
+              <div class="profile-stat"><div class="num">384</div><div class="label">Followers</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="main-feed">
+          <div class="feed-tabs">
+            <span class="feed-tab active">For You</span>
+            <span class="feed-tab">Following</span>
+            <span class="feed-tab">Trending</span>
+          </div>
+          <div class="post-card">
+            <div class="post-header">
+              <div class="post-avatar" style="background:linear-gradient(135deg,#6366f1,#06b6d4)">AM</div>
+              <div class="post-user">
+                <div class="name">Alex Martinez</div>
+                <div class="time"><i class="far fa-clock" style="margin-right:4px"></i> 12 min ago</div>
+              </div>
+            </div>
+            <div class="post-content">Just shipped the new version of our dashboard! ✨ Completely rebuilt the analytics engine with real-time data streaming. The team crushed it. 🚀</div>
+            <div class="post-actions">
+              <span class="post-action liked"><i class="fas fa-heart"></i> 24</span>
+              <span class="post-action"><i class="far fa-comment"></i> 8</span>
+              <span class="post-action"><i class="far fa-bookmark"></i></span>
+              <span class="post-action"><i class="fas fa-retweet"></i> 3</span>
+            </div>
+          </div>
+          <div class="post-card">
+            <div class="post-header">
+              <div class="post-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">JD</div>
+              <div class="post-user">
+                <div class="name">Jane Doe</div>
+                <div class="time"><i class="far fa-clock" style="margin-right:4px"></i> 45 min ago</div>
+              </div>
+            </div>
+            <div class="post-content">New tutorial series: "Building a Real-time Chat App with Socket.io and React" — first episode is live! 📺🔗</div>
+            <div class="post-actions">
+              <span class="post-action"><i class="far fa-heart"></i> 18</span>
+              <span class="post-action"><i class="far fa-comment"></i> 5</span>
+              <span class="post-action"><i class="far fa-bookmark"></i></span>
+              <span class="post-action"><i class="fas fa-retweet"></i> 2</span>
+            </div>
+          </div>
+          <div class="post-card">
+            <div class="post-header">
+              <div class="post-avatar" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">RK</div>
+              <div class="post-user">
+                <div class="name">Ryan Kim</div>
+                <div class="time"><i class="far fa-clock" style="margin-right:4px"></i> 2h ago</div>
+              </div>
+            </div>
+            <div class="post-content">Hot take: TypeScript is not optional for production React apps anymore. The developer experience improvement alone is worth the setup cost. Discuss. 🗣️</div>
+            <div class="post-actions">
+              <span class="post-action liked"><i class="fas fa-heart"></i> 42</span>
+              <span class="post-action"><i class="far fa-comment"></i> 15</span>
+              <span class="post-action"><i class="far fa-bookmark"></i></span>
+              <span class="post-action"><i class="fas fa-retweet"></i> 7</span>
+            </div>
+          </div>
+        </div>
+        <div class="right-sidebar">
+          <div class="sidebar-panel">
+            <div class="panel-title">Online Now <span>14</span></div>
+            <div class="online-user">
+              <span class="dot"></span>
+              <span class="uname">Alice Cooper</span>
+              <span class="status">Typing…</span>
+            </div>
+            <div class="online-user">
+              <span class="dot"></span>
+              <span class="uname">Bob Williams</span>
+              <span class="status">Active</span>
+            </div>
+            <div class="online-user">
+              <span class="dot"></span>
+              <span class="uname">Carol Davis</span>
+              <span class="status">Idle</span>
+            </div>
+            <div class="online-user">
+              <span class="dot"></span>
+              <span class="uname">David Brown</span>
+              <span class="status">Active</span>
+            </div>
+            <div class="online-user">
+              <span class="dot"></span>
+              <span class="uname">Emily Wilson</span>
+              <span class="status">Active</span>
+            </div>
+          </div>
+          <div class="sidebar-panel">
+            <div class="panel-title">Live Chat</div>
+            <div class="chat-messages">
+              <div class="chat-msg other">Hey everyone! 👋</div>
+              <div class="chat-msg other">Check out my new post</div>
+              <div class="chat-msg self">Looks great! 🔥</div>
+            </div>
+            <div class="chat-input-wrap">
+              <input type="text" placeholder="Type a message..." value="Love this app!">
+              <button><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title"><i class="fas fa-star" style="color:#ec4899;margin-right:10px"></i> Features</h2>
+  <p class="section-sub">Real-time social features built for engagement</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+      <h3>Real-time Feed Updates</h3>
+      <p>New posts, likes, and comments appear instantly without page refresh. Powered by WebSocket connections for sub-100ms latency.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-pen-to-square"></i></div>
+      <h3>Post Creation</h3>
+      <p>Rich text post creation with image uploads, character count, and hashtag support. Optimistic UI updates for a snappy experience.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-heart"></i></div>
+      <h3>Likes &amp; Comments</h3>
+      <p>Engage with content through likes and threaded comments. Real-time notification bubbles and activity indicators.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-comments"></i></div>
+      <h3>Live Chat Panel</h3>
+      <p>Built-in group chat with typing indicators, message history, and online presence. Fully synchronized across all connected clients.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-lock"></i></div>
+      <h3>JWT Authentication</h3>
+      <p>Secure JSON Web Token authentication with automatic token refresh. Protected routes and persistent sessions across page reloads.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-mobile-screen"></i></div>
+      <h3>Responsive Design</h3>
+      <p>Mobile-first responsive layout that adapts from phones to desktops. Touch-friendly interactions and smooth animations throughout.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title"><i class="fas fa-code" style="color:#ec4899;margin-right:10px"></i> Tech Stack</h2>
+  <p class="section-sub">Built with modern, production-ready technologies</p>
+  <div class="tech-wrap">
+    <span class="tech-tag" style="background:rgba(97,218,251,0.12);color:#61dafb;border:1px solid rgba(97,218,251,0.2)"><i class="fab fa-react"></i> React 18</span>
+    <span class="tech-tag" style="background:rgba(49,120,198,0.12);color:#3178c6;border:1px solid rgba(49,120,198,0.2)"><i class="fab fa-js"></i> TypeScript</span>
+    <span class="tech-tag" style="background:rgba(51,153,51,0.12);color:#4ade80;border:1px solid rgba(51,153,51,0.2)"><i class="fab fa-node-js"></i> Node.js</span>
+    <span class="tech-tag" style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1)"><i class="fas fa-server"></i> Express</span>
+    <span class="tech-tag" style="background:rgba(0,0,0,0.2);color:#fff;border:1px solid rgba(255,255,255,0.15)"><i class="fas fa-bolt"></i> Socket.io</span>
+    <span class="tech-tag" style="background:rgba(232,168,124,0.12);color:#e8a87c;border:1px solid rgba(232,168,124,0.2)"><i class="fas fa-lock"></i> JWT</span>
+    <span class="tech-tag" style="background:rgba(249,115,22,0.12);color:#fb923c;border:1px solid rgba(249,115,22,0.2)"><i class="fas fa-plug"></i> WebSocket</span>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title"><i class="fas fa-sitemap" style="color:#ec4899;margin-right:10px"></i> Architecture</h2>
+  <p class="section-sub">Project structure at a glance</p>
+  <div class="code-block">
+    <div class="code-header"><span><i class="fas fa-folder-open" style="margin-right:8px;color:#ec4899"></i> Project Structure</span><span style="font-size:12px">roots ~ social-platform</span></div>
+    <div class="code-body">
+<span class="tree-dir">backend/</span><span class="tree-pipe">  </span><span class="tree-comment"># Express + Socket.io server</span>
+<span class="tree-pipe">├──</span> <span class="tree-file">src/</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-file">index.ts</span>             <span class="tree-comment"># Entry point, HTTP + WebSocket setup</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-dir">routes/</span>
+<span class="tree-pipe">│  │  ├──</span> <span class="tree-file">auth.ts</span>              <span class="tree-comment"># Register, login, JWT tokens</span>
+<span class="tree-pipe">│  │  └──</span> <span class="tree-file">posts.ts</span>             <span class="tree-comment"># CRUD posts, likes, comments</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-file">socket/</span>               <span class="tree-comment"># WebSocket event handlers</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-file">models/</span>               <span class="tree-comment"># User, Post, Comment schemas</span>
+<span class="tree-pipe">│  └──</span> <span class="tree-file">middleware/</span>           <span class="tree-comment"># Auth, rate limiting, validation</span>
+<span class="tree-pipe">├──</span> <span class="tree-file">package.json</span>
+<span class="tree-pipe">├──</span> <span class="tree-file">tsconfig.json</span>
+<span class="tree-pipe">└──</span> <span class="tree-file">.env</span>
+
+<span class="tree-dir">frontend/</span><span class="tree-pipe"> </span><span class="tree-comment"># React + Vite SPA</span>
+<span class="tree-pipe">├──</span> <span class="tree-dir">src/</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-file">App.tsx</span>                <span class="tree-comment"># Router, context providers, layout</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-dir">pages/</span>
+<span class="tree-pipe">│  │  ├──</span> <span class="tree-file">Feed.tsx</span>              <span class="tree-comment"># Main feed with real-time posts</span>
+<span class="tree-pipe">│  │  └──</span> <span class="tree-file">Login.tsx</span>             <span class="tree-comment"># Auth page (email/password)</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-file">api/</span>
+<span class="tree-pipe">│  │  └──</span> <span class="tree-file">client.ts</span>             <span class="tree-comment"># Axios + Socket.io client setup</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-file">components/</span>            <span class="tree-comment"># PostCard, ChatPanel, UserList</span>
+<span class="tree-pipe">│  └──</span> <span class="tree-file">hooks/</span>                 <span class="tree-comment"># useSocket, useAuth, useFeed</span>
+<span class="tree-pipe">├──</span> <span class="tree-file">package.json</span>
+<span class="tree-pipe">├──</span> <span class="tree-file">vite.config.ts</span>
+<span class="tree-pipe">└──</span> <span class="tree-file">tsconfig.json</span>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title"><i class="fas fa-terminal" style="color:#ec4899;margin-right:10px"></i> Run Locally</h2>
+  <p class="section-sub">Get the development server up and running in seconds</p>
+  <div class="snippet-block">
+    <div class="snippet-header"><i class="fas fa-circle" style="font-size:8px"></i> terminal &mdash; bash<div style="flex:1"></div><i class="far fa-clipboard" style="cursor:default;color:#475569"></i></div>
+    <div class="snippet-body">
+<span class="comment"># Clone the repository</span>
+<span class="prompt">$</span> <span class="cmd">git clone https://github.com/your-org/social-platform</span>
+<span class="prompt">$</span> <span class="cmd">cd social-platform</span>
+
+<span class="comment"># Install all dependencies</span>
+<span class="prompt">$</span> <span class="cmd">npm install</span>
+
+<span class="comment"># Configure environment variables</span>
+<span class="prompt">$</span> <span class="cmd">cp .env.example .env</span>
+
+<span class="comment"># Start both servers concurrently</span>
+<span class="prompt">$</span> <span class="cmd">npm run dev</span>
+
+<span class="output">  ➜  Frontend: http://localhost:5173</span>
+<span class="output">  ➜  Backend:  http://localhost:3001</span>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <a href="https://github.com/your-org/social-platform" class="footer-link" target="_blank" rel="noopener"><i class="fab fa-github"></i> View on GitHub — social-platform</a>
+  <div class="footer-copy">&copy; 2026 Project Showcase</div>
+</footer>
+
+</div>
+</body>
+</html>
