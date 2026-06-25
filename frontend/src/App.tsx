@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react'
 import Login from './pages/Login'
 import Feed from './pages/Feed'
+import { ToastProvider } from './components/Toast'
 
 interface User { id: number; username: string; email: string }
 
@@ -47,13 +48,15 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout }}>
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <span style={styles.logo}>Social</span>
-          {user && <button onClick={logout} style={styles.logoutBtn}>Logout</button>}
+      <ToastProvider>
+        <div style={styles.container}>
+          <div style={styles.header}>
+            <span style={styles.logo}>Social</span>
+            {user && <button onClick={logout} style={styles.logoutBtn}>Logout</button>}
+          </div>
+          {user ? <Feed /> : <Login />}
         </div>
-        {user ? <Feed /> : <Login />}
-      </div>
+      </ToastProvider>
     </AuthContext.Provider>
   )
 }

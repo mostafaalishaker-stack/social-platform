@@ -13,6 +13,7 @@
   <meta name="twitter:description" content="Interactive demo of Social Platform with real-time feed, instant chat, and post interactions.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Social Platform Demo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌐</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -121,11 +122,29 @@ a { color: #38bdf8; text-decoration: none; }
   .app-inner { grid-template-columns: 1fr; }
   .left-sidebar, .right-sidebar { display: none; }
 }
+.skeleton { background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skeleton-text { height: 14px; margin-bottom: 8px; width: 80%; }
+.skeleton-title { height: 20px; margin-bottom: 12px; width: 50%; }
+.skeleton-avatar { width: 40px; height: 40px; border-radius: 50%; }
+.empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
+.empty-state i { font-size: 48px; margin-bottom: 16px; display: block; color: #334155; }
+.empty-state h3 { font-size: 18px; color: #94a3b8; margin-bottom: 8px; }
+.empty-state p { font-size: 14px; color: #64748b; }
+.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast { padding: 12px 20px; border-radius: 10px; font-size: 14px; display: flex; align-items: center; gap: 8px; animation: slideIn .3s ease; min-width: 280px; max-width: 400px; }
+.toast.success { background: #065f46; color: #6ee7b7; border: 1px solid rgba(110,231,183,.2); }
+.toast.error { background: #7f1d1d; color: #fca5a5; border: 1px solid rgba(252,165,165,.2); }
+.toast.info { background: #1e3a5f; color: #93c5fd; border: 1px solid rgba(147,197,253,.2); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.toast .close-btn { margin-left: auto; background: none; border: none; color: inherit; opacity: .5; cursor: pointer; font-size: 16px; padding: 0; }
 </style>
 </head>
 <body>
 
-<a href='/' class='back-link'><i class='fas fa-arrow-left'></i> Back to Portfolio</a>
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+<a href='../index.html' class='back-link'><i class='fas fa-arrow-left'></i> Back to Portfolio</a>
 
 <!-- ========== LOGIN ========== -->
 <div id="loginPage" class="login-page fade-in">
@@ -270,6 +289,47 @@ let posts = [
 
 let nextId = 4;
 let currentUser = { name: 'You', handle: '@johndoe', colorIdx: 6 };
+
+function showSkeleton(container, type) {
+  var html = '';
+  if (type === 'card') {
+    for (var i = 0; i < 3; i++) {
+      html += '<div class="skeleton" style="padding:16px;margin-bottom:12px"><div class="skeleton-title"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width:60%"></div></div>';
+    }
+  } else if (type === 'list') {
+    for (var i = 0; i < 5; i++) {
+      html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 0"><div class="skeleton skeleton-avatar"></div><div style="flex:1"><div class="skeleton-title"></div><div class="skeleton-text" style="width:60%"></div></div></div>';
+    }
+  } else if (type === 'avatar') {
+    html = '<div style="display:flex;align-items:center;gap:12px"><div class="skeleton skeleton-avatar"></div><div style="flex:1"><div class="skeleton-text" style="width:40%"></div></div></div>';
+  } else {
+    html = '<div class="skeleton" style="padding:16px"><div class="skeleton-title"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width:60%"></div></div>';
+  }
+  container.innerHTML = html;
+}
+
+function hideSkeleton(container) {
+  container.innerHTML = '';
+}
+
+function showEmptyState(container, icon, title, message) {
+  container.innerHTML = '<div class="empty-state"><i class="' + icon + '"></i><h3>' + title + '</h3><p>' + message + '</p></div>';
+}
+
+function showToast(message, type, duration) {
+  if (typeof type === 'boolean') type = type ? 'success' : 'error';
+  type = type || 'info';
+  duration = duration || 3000;
+  var container = document.getElementById('toast-container');
+  if (!container) return;
+  var toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  toast.innerHTML = '<span>' + message + '</span><button class="close-btn" onclick="this.parentElement.remove()">&times;</button>';
+  container.appendChild(toast);
+  setTimeout(function() {
+    if (toast.parentElement) toast.remove();
+  }, duration);
+}
 
 /* ========== RENDER ========== */
 function renderPosts() {

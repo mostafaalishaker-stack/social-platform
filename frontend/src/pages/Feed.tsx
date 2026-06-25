@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
 import { useAuth } from '../App'
 import client from '../api/client'
+import { useToast } from '../components/Toast'
+import SkeletonCard from '../components/SkeletonCard'
+import EmptyState from '../components/EmptyState'
 
 interface Comment { id: number; username: string; text: string; createdAt: string }
 interface Post { id: number; userId: number; username: string; content: string; likes: number; likedBy: number[]; comments: Comment[]; createdAt: string }
@@ -9,8 +12,11 @@ interface ChatMsg { id: string; username: string; text: string; timestamp: strin
 
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5002'
 
+const POSTS_PER_PAGE = 5;
+
 export default function Feed() {
   const { user } = useAuth()
+  const { showToast } = useToast()
   const [posts, setPosts] = useState<Post[]>([])
   const [newContent, setNewContent] = useState('')
   const [chatMsg, setChatMsg] = useState('')
@@ -18,6 +24,7 @@ export default function Feed() {
   const [expandedPost, setExpandedPost] = useState<number | null>(null)
   const [commentText, setCommentText] = useState('')
   const [loading, setLoading] = useState(true)
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE)
   const socketRef = useRef<Socket | null>(null)
   const chatEndRef = useRef<HTMLDivElement>(null)
 
@@ -58,8 +65,9 @@ export default function Feed() {
       setPosts((prev) => [data, ...prev])
       setNewContent('')
       socketRef.current?.emit('post:created', data)
+      showToast('Post created successfully!', 'success')
     } catch (err) {
-      console.error('Failed to create post:', err)
+      showToast('Failed to create post', 'error')
     }
   }
 
@@ -67,8 +75,9 @@ export default function Feed() {
     try {
       const { data } = await client.post<{ likes: number; liked: boolean }>(`/posts/${postId}/like`)
       setPosts((prev) => prev.map((p) => p.id === postId ? { ...p, likes: data.likes, likedBy: data.liked ? [...p.likedBy, user!.id] : p.likedBy.filter((id) => id !== user!.id) } : p))
+      showToast(data.liked ? 'Post liked!' : 'Post unliked', 'info')
     } catch (err) {
-      console.error('Failed to like post:', err)
+      showToast('Failed to like post', 'error')
     }
   }
 
@@ -78,8 +87,9 @@ export default function Feed() {
       const { data } = await client.post<Comment>(`/posts/${postId}/comment`, { text: commentText })
       setPosts((prev) => prev.map((p) => p.id === postId ? { ...p, comments: [...p.comments, data] } : p))
       setCommentText('')
+      showToast('Comment added!', 'success')
     } catch (err) {
-      console.error('Failed to add comment:', err)
+      showToast('Failed to add comment', 'error')
     }
   }
 
@@ -95,7 +105,15 @@ export default function Feed() {
   }
 
   if (loading) {
-    return <div style={styles.loading}>Loading feed...</div>
+    return (
+      <div style={styles.feedContainer} role="main">
+        <div style={styles.mainColumn} role="feed" aria-label="Post feed loading">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -118,7 +136,13 @@ export default function Feed() {
           </div>
         </div>
 
-        {posts.map((post) => {
+        {posts.length === 0 ? (
+          <EmptyState
+            icon="📝"
+            title="No posts yet"
+            message="Be the first to share something with the community!"
+          />
+        ) : posts.slice(0, visibleCount).map((post) => {
           const isLiked = post.likedBy.includes(user!.id)
           const isExpanded = expandedPost === post.id
 
@@ -167,6 +191,14 @@ export default function Feed() {
             </div>
           )
         })}
+        {visibleCount < posts.length && (
+          <button
+            onClick={() => setVisibleCount(prev => prev + POSTS_PER_PAGE)}
+            style={styles.loadMoreBtn}
+          >
+            Load More ({posts.length - visibleCount} remaining)
+          </button>
+        )}
       </div>
 
       <div style={styles.chatPanel} role="complementary" aria-label="Live chat">
@@ -231,4 +263,5 @@ const styles: Record<string, React.CSSProperties> = {
   chatForm: { display: 'flex', padding: '12px 16px', borderTop: '1px solid #2d2d4a', gap: 8 },
   chatInput: { flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid #2d2d4a', background: '#0f0f1a', color: '#e2e8f0', fontSize: 13, outline: 'none' },
   chatSendBtn: { width: 40, height: 40, borderRadius: '50%', border: 'none', background: 'linear-gradient(135deg, #ec4899, #f43f5e)', color: '#fff', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  loadMoreBtn: { width: '100%', padding: '12px', borderRadius: 12, border: '1px solid #2d2d4a', background: '#0f0f1a', color: '#ec4899', fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', transition: 'all .2s' },
 }

@@ -2,7 +2,9 @@ import express, { Request, Response, NextFunction } from 'express'
 import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
+import helmet from 'helmet'
 import dotenv from 'dotenv'
+import { apiLimiter, authLimiter } from './middleware/rateLimiter.js'
 import authRoutes from './routes/auth.js'
 import postRoutes from './routes/posts.js'
 
@@ -28,33 +30,20 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
   next()
 })
 
+app.use(helmet())
 app.use(cors({ origin: corsOrigin }))
 app.use(express.json())
 
-// Simple in-memory rate limiter
-const requestCounts = new Map<string, { count: number; resetTime: number }>()
-const rateLimit = (windowMs: number, maxRequests: number) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const ip = req.ip || 'unknown'
-    const now = Date.now()
-    const record = requestCounts.get(ip)
-    if (!record || now > record.resetTime) {
-      requestCounts.set(ip, { count: 1, resetTime: now + windowMs })
-      next()
-    } else if (record.count >= maxRequests) {
-      res.status(429).json({ error: 'Too many requests, please try again later' })
-    } else {
-      record.count++
-      next()
-    }
-  }
-}
-app.use('/api/', rateLimit(60_000, 60))
+app.use('/api/', apiLimiter)
+app.use('/api/auth/', authLimiter)
+
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+})
 
 app.use('/api/auth', authRoutes)
 app.use('/api/posts', postRoutes)
 
-// Global error handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('Unhandled error:', err)
   res.status(500).json({ error: 'Internal server error' })

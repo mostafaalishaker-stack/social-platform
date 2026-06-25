@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useAuth } from '../App'
 import client from '../api/client'
+import { useToast } from '../components/Toast'
 
 export default function Login() {
   const { login } = useAuth()
+  const { showToast } = useToast()
   const [isRegister, setIsRegister] = useState(false)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -18,9 +20,11 @@ export default function Login() {
       const body = isRegister ? { username, email, password } : { email, password }
       const { data } = await client.post(endpoint, body)
       login(data.token, data.user)
+      showToast(isRegister ? 'Account created successfully!' : 'Logged in successfully!', 'success')
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || 'Something went wrong'
       setError(msg)
+      showToast(msg, 'error')
     }
   }
 
