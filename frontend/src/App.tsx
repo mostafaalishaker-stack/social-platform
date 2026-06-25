@@ -11,7 +11,7 @@ interface AuthContextType {
   logout: () => void
 }
 
-const AuthContext = createContext<AuthContextType>(null!)
+const AuthContext = createContext<AuthContextType>(undefined as unknown as AuthContextType)
 
 export const useAuth = () => useContext(AuthContext)
 
@@ -19,6 +19,8 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
 
+  // NOTE: Tokens stored in localStorage for demo simplicity.
+  // For production, use httpOnly cookies to prevent XSS attacks.
   useEffect(() => {
     const t = localStorage.getItem('token')
     const u = localStorage.getItem('user')
@@ -29,6 +31,7 @@ export default function App() {
   }, [])
 
   const login = (t: string, u: User) => {
+    // Storing in localStorage (httpOnly cookies recommended for production)
     localStorage.setItem('token', t)
     localStorage.setItem('user', JSON.stringify(u))
     setToken(t)

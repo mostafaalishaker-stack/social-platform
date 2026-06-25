@@ -7,7 +7,7 @@ interface Comment { id: number; username: string; text: string; createdAt: strin
 interface Post { id: number; userId: number; username: string; content: string; likes: number; likedBy: number[]; comments: Comment[]; createdAt: string }
 interface ChatMsg { id: string; username: string; text: string; timestamp: string }
 
-const SOCKET_URL = 'http://localhost:5002'
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5002'
 
 export default function Feed() {
   const { user } = useAuth()
@@ -22,7 +22,17 @@ export default function Feed() {
   const chatEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    fetchPosts()
+    const loadPosts = async () => {
+      try {
+        const { data } = await client.get<Post[]>('/posts')
+        setPosts(data)
+      } catch (err) {
+        console.error('Failed to fetch posts:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadPosts()
     const socket = io(SOCKET_URL)
     socketRef.current = socket
 
@@ -41,15 +51,6 @@ export default function Feed() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const fetchPosts = async () => {
-    try {
-      const { data } = await client.get<Post[]>('/posts')
-      setPosts(data)
-    } catch { /* ignore */ } finally {
-      setLoading(false)
-    }
-  }
-
   const createPost = async () => {
     if (!newContent.trim()) return
     try {
@@ -57,14 +58,18 @@ export default function Feed() {
       setPosts((prev) => [data, ...prev])
       setNewContent('')
       socketRef.current?.emit('post:created', data)
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error('Failed to create post:', err)
+    }
   }
 
   const handleLike = async (postId: number) => {
     try {
       const { data } = await client.post<{ likes: number; liked: boolean }>(`/posts/${postId}/like`)
       setPosts((prev) => prev.map((p) => p.id === postId ? { ...p, likes: data.likes, likedBy: data.liked ? [...p.likedBy, user!.id] : p.likedBy.filter((id) => id !== user!.id) } : p))
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error('Failed to like post:', err)
+    }
   }
 
   const addComment = async (postId: number) => {
@@ -73,7 +78,9 @@ export default function Feed() {
       const { data } = await client.post<Comment>(`/posts/${postId}/comment`, { text: commentText })
       setPosts((prev) => prev.map((p) => p.id === postId ? { ...p, comments: [...p.comments, data] } : p))
       setCommentText('')
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error('Failed to add comment:', err)
+    }
   }
 
   const sendChat = (e: React.FormEvent) => {
@@ -92,11 +99,11 @@ export default function Feed() {
   }
 
   return (
-    <div style={styles.feedContainer}>
-      <div style={styles.mainColumn}>
+    <div style={styles.feedContainer} role="main">
+      <div style={styles.mainColumn} role="feed" aria-label="Post feed">
         <div style={styles.createCard}>
           <div style={styles.createRow}>
-            <div style={styles.avatarSmall}>{user?.username[0].toUpperCase()}</div>
+            <div style={styles.avatarSmall} role="img" aria-label={user?.username || 'You'}>{user?.username[0].toUpperCase()}</div>
             <textarea
               placeholder="What's on your mind?"
               value={newContent}
@@ -116,9 +123,9 @@ export default function Feed() {
           const isExpanded = expandedPost === post.id
 
           return (
-            <div key={post.id} style={styles.postCard}>
+            <div key={post.id} style={styles.postCard} aria-label={`Post by ${post.username}`}>
               <div style={styles.postHeader}>
-                <div style={styles.avatar}>{post.username[0].toUpperCase()}</div>
+                <div style={styles.avatar} role="img" aria-label={`${post.username}'s avatar`}>{post.username[0].toUpperCase()}</div>
                 <div>
                   <div style={styles.username}>{post.username}</div>
                   <div style={styles.time}>{formatTime(post.createdAt)}</div>
@@ -126,15 +133,15 @@ export default function Feed() {
               </div>
               <p style={styles.content}>{post.content}</p>
               <div style={styles.postActions}>
-                <button onClick={() => handleLike(post.id)} style={{ ...styles.actionBtn, color: isLiked ? '#f43f5e' : '#94a3b8' }}>
+                <button onClick={() => handleLike(post.id)} style={{ ...styles.actionBtn, color: isLiked ? '#f43f5e' : '#94a3b8' }} aria-label={isLiked ? 'Unlike this post' : 'Like this post'}>
                   {isLiked ? '❤️' : '🤍'} {post.likes}
                 </button>
-                <button onClick={() => setExpandedPost(isExpanded ? null : post.id)} style={styles.actionBtn}>
+                <button onClick={() => setExpandedPost(isExpanded ? null : post.id)} style={styles.actionBtn} aria-label={isExpanded ? 'Close comments' : 'Open comments'}>
                   💬 {post.comments.length}
                 </button>
               </div>
               {isExpanded && (
-                <div style={styles.commentsSection}>
+                <div style={styles.commentsSection} role="region" aria-label="Comments">
                   <div style={styles.commentsList}>
                     {post.comments.length === 0 && <p style={styles.noComments}>No comments yet</p>}
                     {post.comments.map((c) => (
@@ -151,8 +158,9 @@ export default function Feed() {
                       value={commentText}
                       onChange={(e) => setCommentText(e.target.value)}
                       style={styles.commentInput}
+                      aria-label="Write a comment"
                     />
-                    <button onClick={() => addComment(post.id)} style={styles.commentSubmit}>Send</button>
+                    <button onClick={() => addComment(post.id)} style={styles.commentSubmit} aria-label="Submit comment">Send</button>
                   </div>
                 </div>
               )}
@@ -161,25 +169,26 @@ export default function Feed() {
         })}
       </div>
 
-      <div style={styles.chatPanel}>
+      <div style={styles.chatPanel} role="complementary" aria-label="Live chat">
         <div style={styles.chatHeader}>Live Chat</div>
-        <div style={styles.chatMessages}>
-          {messages.map((m, i) => (
-            <div key={i} style={styles.chatMsg}>
+        <div style={styles.chatMessages} role="log" aria-live="polite" aria-label="Chat messages">
+          {messages.map((m) => (
+            <div key={`${m.id}-${m.timestamp}`} style={styles.chatMsg}>
               <strong style={{ color: '#f43f5e' }}>{m.username}:</strong>
               <span style={{ marginLeft: 6 }}>{m.text}</span>
             </div>
           ))}
           <div ref={chatEndRef} />
         </div>
-        <form onSubmit={sendChat} style={styles.chatForm}>
+        <form onSubmit={sendChat} style={styles.chatForm} role="form" aria-label="Chat message form">
           <input
             placeholder="Type a message..."
             value={chatMsg}
             onChange={(e) => setChatMsg(e.target.value)}
             style={styles.chatInput}
+            aria-label="Chat message"
           />
-          <button type="submit" style={styles.chatSendBtn}>➤</button>
+          <button type="submit" style={styles.chatSendBtn} aria-label="Send message">➤</button>
         </form>
       </div>
     </div>

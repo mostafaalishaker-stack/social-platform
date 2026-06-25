@@ -2,16 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <meta name="description" content="Interactive demo of Social Platform with real-time feed, instant chat, and post interactions. React + Socket.io portfolio project.">
+  <meta property="og:title" content="Social Platform - Live Demo">
+  <meta property="og:description" content="Interactive demo of Social Platform with real-time feed, instant chat, and post interactions.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mostafaali.dev/social-platform/demo">
+  <meta property="og:image" content="https://mostafaali.dev/social-platform/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Social Platform - Live Demo">
+  <meta name="twitter:description" content="Interactive demo of Social Platform with real-time feed, instant chat, and post interactions.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Social Platform Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
+*:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
 body { font-family: 'Inter', sans-serif; background: #0b1120; color: #e2e8f0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
 a { color: #38bdf8; text-decoration: none; }
+.back-link{position:fixed;top:16px;left:16px;display:inline-flex;align-items:center;gap:6px;color:#64748b;font-size:13px;font-weight:500;z-index:100;background:#131c31;padding:8px 14px;border-radius:8px;border:1px solid #1e293b;transition:color .2s}.back-link:hover{color:#38bdf8}
 .fade-in { animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -114,18 +125,17 @@ a { color: #38bdf8; text-decoration: none; }
 </head>
 <body>
 
+<a href='/' class='back-link'><i class='fas fa-arrow-left'></i> Back to Portfolio</a>
+
 <!-- ========== LOGIN ========== -->
 <div id="loginPage" class="login-page fade-in">
   <div class="login-box">
     <h1><i class="fas fa-hashtag" style="color:#38bdf8;margin-right:8px;"></i>Connect</h1>
     <p class="sub">Log in to your social feed</p>
-    <label>Username</label>
-    <input type="text" id="loginUser" placeholder="username" value="johndoe">
-    <label>Password</label>
-    <input type="password" id="loginPass" placeholder="••••••••" value="pass123">
-    <div class="login-error" id="loginError">Invalid username or password</div>
+    <label for="loginEmail">Email</label> <input type="email" id="loginEmail" placeholder="email@example.com">
+    <label for="loginPass">Password</label> <input type="password" id="loginPass" placeholder="••••••••">
+    <div class="login-error" id="loginError">Invalid email or password</div>
     <button onclick="handleLogin()">Log In</button>
-    <p style="margin-top:1rem;text-align:center;font-size:0.8rem;color:#64748b;">Demo: johndoe / pass123</p>
   </div>
 </div>
 
@@ -346,15 +356,16 @@ function createPost() {
 
 /* ========== AUTH ========== */
 function handleLogin() {
-  const user = document.getElementById('loginUser').value;
+  const email = document.getElementById('loginEmail').value;
   const pass = document.getElementById('loginPass').value;
-  if (user === 'johndoe' && pass === 'pass123') {
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    renderPosts();
-  } else {
+  if (!email || !pass) {
+    document.getElementById('loginError').textContent = 'Email and password are required';
     document.getElementById('loginError').style.display = 'block';
+    return;
   }
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  renderPosts();
 }
 
 function handleLogout() {
@@ -366,7 +377,7 @@ function handleLogout() {
 /* ========== ENTER KEY ========== */
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
-  document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+  document.getElementById('loginEmail').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
   document.getElementById('postTextarea').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); createPost(); }
   });

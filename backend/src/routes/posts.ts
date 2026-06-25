@@ -25,9 +25,12 @@ interface Post {
   createdAt: string
 }
 
+// In-memory post storage (resets on server restart)
 const posts: Post[] = []
 let nextPostId = 1
 let nextCommentId = 1
+
+const JWT_SECRET = process.env.JWT_SECRET || ''
 
 const authMiddleware = (req: AuthRequest, res: Response, next: () => void) => {
   const header = req.headers.authorization
@@ -36,7 +39,7 @@ const authMiddleware = (req: AuthRequest, res: Response, next: () => void) => {
     return
   }
   try {
-    const decoded = jwt.verify(header.split(' ')[1], process.env.JWT_SECRET || 'secret') as { id: number; username: string }
+    const decoded = jwt.verify(header.split(' ')[1], JWT_SECRET) as { id: number; username: string }
     req.user = decoded
     next()
   } catch {
@@ -51,15 +54,16 @@ router.get('/', (_req: Request, res: Response) => {
 
 router.post('/', authMiddleware, (req: AuthRequest, res: Response) => {
   const { content } = req.body
-  if (!content) {
+  if (!content || typeof content !== 'string' || !content.trim()) {
     res.status(400).json({ error: 'Content is required' })
     return
   }
+  const sanitized = content.trim().slice(0, 1000)
   const post: Post = {
     id: nextPostId++,
     userId: req.user!.id,
     username: req.user!.username,
-    content,
+    content: sanitized,
     likes: 0,
     likedBy: [],
     comments: [],
@@ -93,11 +97,12 @@ router.post('/:id/comment', authMiddleware, (req: AuthRequest, res: Response) =>
     return
   }
   const { text } = req.body
-  if (!text) {
+  if (!text || typeof text !== 'string' || !text.trim()) {
     res.status(400).json({ error: 'Text is required' })
     return
   }
-  const comment: Comment = { id: nextCommentId++, username: req.user!.username, text, createdAt: new Date().toISOString() }
+  const sanitized = text.trim().slice(0, 500)
+  const comment: Comment = { id: nextCommentId++, username: req.user!.username, text: sanitized, createdAt: new Date().toISOString() }
   post.comments.push(comment)
   res.status(201).json(comment)
 })

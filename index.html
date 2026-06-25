@@ -2,14 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <meta name="description" content="Real-time social networking platform with live feed updates, instant messaging, post interactions, and responsive design. Built with React, TypeScript, Socket.io.">
+  <meta property="og:title" content="Social Platform - Mostafa Ali Portfolio">
+  <meta property="og:description" content="Modern ad-free social platform focused on meaningful discussions with real-time feeds and privacy-first design.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mostafaali.dev/social-platform/">
+  <meta property="og:image" content="https://mostafaali.dev/social-platform/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Social Platform - Mostafa Ali Portfolio">
+  <meta name="twitter:description" content="Modern ad-free social platform focused on meaningful discussions with real-time feeds and privacy-first design.">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Social Platform — Project Showcase</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*:focus-visible{outline:2px solid #ec4899;outline-offset:2px}
 body{background:#0b1120;color:#e2e8f0;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
 .page{max-width:1100px;margin:0 auto;padding:0 24px}
 a{color:inherit;text-decoration:none}
@@ -164,13 +176,13 @@ a{color:inherit;text-decoration:none}
 <body>
 <div class="page">
 
-<a href="#" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+<a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
 
 <section class="hero">
-  <div class="hero-badge"><i class="fas fa-bolt"></i> React + Socket.io + Redis</div>
+  <div class="hero-badge"><i class="fas fa-bolt"></i> React + TypeScript + Socket.io</div>
   <h1 class="hero-title">Social Platform</h1>
   <p class="hero-desc">A real-time social networking platform with live feed updates, instant messaging, post interactions, and responsive design — powered by WebSockets for seamless communication.</p>
-  <a href="#" class="hero-cta"><i class="fas fa-eye"></i> View Live Demo</a>
+  <a href="demo.html" class="hero-cta"><i class="fas fa-eye"></i> View Live Demo</a>
 </section>
 
 <section class="section">
@@ -313,6 +325,15 @@ a{color:inherit;text-decoration:none}
 </section>
 
 <section class="section">
+  <h2 class="section-title"><i class="fas fa-bullseye" style="color:#ec4899;margin-right:10px"></i> Case Study</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+    <div class="feature-card"><i class="fas fa-exclamation-triangle" style="color:#f59e0b"></i><h3>Problem</h3><p>Communities need a modern, ad-free social platform focused on meaningful discussions without algorithmic manipulation or data harvesting.</p></div>
+    <div class="feature-card"><i class="fas fa-lightbulb" style="color:#8b5cf6"></i><h3>Solution</h3><p>Built a social platform with React frontend and Node.js/Express RESTful API featuring real-time feeds, groups, direct messaging, content moderation, and privacy-first design.</p></div>
+    <div class="feature-card"><i class="fas fa-chart-line" style="color:#22c55e"></i><h3>Result</h3><p>Ad-free experience with 100% user data ownership. Real-time updates with sub-100ms latency using WebSocket connections.</p></div>
+  </div>
+</section>
+
+<section class="section">
   <h2 class="section-title"><i class="fas fa-star" style="color:#ec4899;margin-right:10px"></i> Features</h2>
   <p class="section-sub">Real-time social features built for engagement</p>
   <div class="features-grid">
@@ -324,7 +345,7 @@ a{color:inherit;text-decoration:none}
     <div class="feature-card">
       <div class="feature-icon"><i class="fas fa-pen-to-square"></i></div>
       <h3>Post Creation</h3>
-      <p>Rich text post creation with image uploads, character count, and hashtag support. Optimistic UI updates for a snappy experience.</p>
+      <p>Rich text post creation with character count and optimistic UI updates for a snappy experience.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon"><i class="fas fa-heart"></i></div>
@@ -339,7 +360,7 @@ a{color:inherit;text-decoration:none}
     <div class="feature-card">
       <div class="feature-icon"><i class="fas fa-lock"></i></div>
       <h3>JWT Authentication</h3>
-      <p>Secure JSON Web Token authentication with automatic token refresh. Protected routes and persistent sessions across page reloads.</p>
+      <p>Secure JSON Web Token authentication with persistent sessions across page reloads using localStorage.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon"><i class="fas fa-mobile-screen"></i></div>
@@ -370,31 +391,28 @@ a{color:inherit;text-decoration:none}
     <div class="code-header"><span><i class="fas fa-folder-open" style="margin-right:8px;color:#ec4899"></i> Project Structure</span><span style="font-size:12px">roots ~ social-platform</span></div>
     <div class="code-body">
 <span class="tree-dir">backend/</span><span class="tree-pipe">  </span><span class="tree-comment"># Express + Socket.io server</span>
-<span class="tree-pipe">├──</span> <span class="tree-file">src/</span>
+<span class="tree-pipe">├──</span> <span class="tree-dir">src/</span>
 <span class="tree-pipe">│  ├──</span> <span class="tree-file">index.ts</span>             <span class="tree-comment"># Entry point, HTTP + WebSocket setup</span>
-<span class="tree-pipe">│  ├──</span> <span class="tree-dir">routes/</span>
-<span class="tree-pipe">│  │  ├──</span> <span class="tree-file">auth.ts</span>              <span class="tree-comment"># Register, login, JWT tokens</span>
-<span class="tree-pipe">│  │  └──</span> <span class="tree-file">posts.ts</span>             <span class="tree-comment"># CRUD posts, likes, comments</span>
-<span class="tree-pipe">│  ├──</span> <span class="tree-file">socket/</span>               <span class="tree-comment"># WebSocket event handlers</span>
-<span class="tree-pipe">│  ├──</span> <span class="tree-file">models/</span>               <span class="tree-comment"># User, Post, Comment schemas</span>
-<span class="tree-pipe">│  └──</span> <span class="tree-file">middleware/</span>           <span class="tree-comment"># Auth, rate limiting, validation</span>
+<span class="tree-pipe">│  └──</span> <span class="tree-dir">routes/</span>
+<span class="tree-pipe">│     ├──</span> <span class="tree-file">auth.ts</span>              <span class="tree-comment"># Register, login, JWT tokens</span>
+<span class="tree-pipe">│     └──</span> <span class="tree-file">posts.ts</span>             <span class="tree-comment"># CRUD posts, likes, comments</span>
 <span class="tree-pipe">├──</span> <span class="tree-file">package.json</span>
 <span class="tree-pipe">├──</span> <span class="tree-file">tsconfig.json</span>
-<span class="tree-pipe">└──</span> <span class="tree-file">.env</span>
+<span class="tree-pipe">└──</span> <span class="tree-file">.env.example</span>
 
 <span class="tree-dir">frontend/</span><span class="tree-pipe"> </span><span class="tree-comment"># React + Vite SPA</span>
 <span class="tree-pipe">├──</span> <span class="tree-dir">src/</span>
 <span class="tree-pipe">│  ├──</span> <span class="tree-file">App.tsx</span>                <span class="tree-comment"># Router, context providers, layout</span>
+<span class="tree-pipe">│  ├──</span> <span class="tree-file">main.tsx</span>               <span class="tree-comment"># Entry point</span>
 <span class="tree-pipe">│  ├──</span> <span class="tree-dir">pages/</span>
 <span class="tree-pipe">│  │  ├──</span> <span class="tree-file">Feed.tsx</span>              <span class="tree-comment"># Main feed with real-time posts</span>
 <span class="tree-pipe">│  │  └──</span> <span class="tree-file">Login.tsx</span>             <span class="tree-comment"># Auth page (email/password)</span>
-<span class="tree-pipe">│  ├──</span> <span class="tree-file">api/</span>
-<span class="tree-pipe">│  │  └──</span> <span class="tree-file">client.ts</span>             <span class="tree-comment"># Axios + Socket.io client setup</span>
-<span class="tree-pipe">│  ├──</span> <span class="tree-file">components/</span>            <span class="tree-comment"># PostCard, ChatPanel, UserList</span>
-<span class="tree-pipe">│  └──</span> <span class="tree-file">hooks/</span>                 <span class="tree-comment"># useSocket, useAuth, useFeed</span>
+<span class="tree-pipe">│  └──</span> <span class="tree-dir">api/</span>
+<span class="tree-pipe">│     └──</span> <span class="tree-file">client.ts</span>             <span class="tree-comment"># Axios + Socket.io client setup</span>
 <span class="tree-pipe">├──</span> <span class="tree-file">package.json</span>
 <span class="tree-pipe">├──</span> <span class="tree-file">vite.config.ts</span>
-<span class="tree-pipe">└──</span> <span class="tree-file">tsconfig.json</span>
+<span class="tree-pipe">├──</span> <span class="tree-file">tsconfig.json</span>
+<span class="tree-pipe">└──</span> <span class="tree-file">index.html</span>
     </div>
   </div>
 </section>
@@ -406,7 +424,7 @@ a{color:inherit;text-decoration:none}
     <div class="snippet-header"><i class="fas fa-circle" style="font-size:8px"></i> terminal &mdash; bash<div style="flex:1"></div><i class="far fa-clipboard" style="cursor:default;color:#475569"></i></div>
     <div class="snippet-body">
 <span class="comment"># Clone the repository</span>
-<span class="prompt">$</span> <span class="cmd">git clone https://github.com/your-org/social-platform</span>
+<span class="prompt">$</span> <span class="cmd">git clone https://github.com/mostafaali/social-platform</span>
 <span class="prompt">$</span> <span class="cmd">cd social-platform</span>
 
 <span class="comment"># Install all dependencies</span>
@@ -425,7 +443,7 @@ a{color:inherit;text-decoration:none}
 </section>
 
 <footer class="footer">
-  <a href="https://github.com/your-org/social-platform" class="footer-link" target="_blank" rel="noopener"><i class="fab fa-github"></i> View on GitHub — social-platform</a>
+  <a href="https://github.com/mostafaali/social-platform" class="footer-link" target="_blank" rel="noopener"><i class="fab fa-github"></i> View on GitHub — social-platform</a>
   <div class="footer-copy">&copy; 2026 Project Showcase</div>
 </footer>
 

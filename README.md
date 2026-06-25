@@ -26,30 +26,41 @@ social-platform/
 │   │       ├── auth.ts       # Register/Login
 │   │       └── posts.ts      # Posts CRUD
 │   ├── package.json
-│   └── tsconfig.json
+│   ├── tsconfig.json
+│   └── .env.example
 └── frontend/
     ├── src/
     │   ├── main.tsx
     │   ├── App.tsx            # Auth context & layout
-    │   ├── api/client.ts      # Axios instance
+    │   ├── api/client.ts      # Axios instance with auth interceptor
     │   └── pages/
     │       ├── Login.tsx      # Login/Register form
     │       └── Feed.tsx       # Social feed + chat
     ├── index.html
     ├── vite.config.ts
+    ├── tsconfig.json
     └── package.json
 ```
 
 ## How to Run
 
-### Backend
+### From root (requires `concurrently`)
+```bash
+npm install
+npm run install:all
+npm run dev
+```
+
+### Or separately
+
+#### Backend
 ```bash
 cd backend
 npm install
 npm run dev
 ```
 
-### Frontend
+#### Frontend
 ```bash
 cd frontend
 npm install

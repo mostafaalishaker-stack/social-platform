@@ -25,40 +25,48 @@ export default function Login() {
   }
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.card}>
+    <div style={styles.wrapper} role="main">
+      <div style={styles.card} role="form" aria-label={isRegister ? 'Registration form' : 'Login form'}>
         <h2 style={styles.title}>{isRegister ? 'Create Account' : 'Welcome Back'}</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           {isRegister && (
-            <input
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              style={styles.input}
-            />
+            <>
+              <label htmlFor="username-input" style={styles.label}>Username</label>
+              <input
+                id="username-input"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                style={styles.input}
+              />
+            </>
           )}
+          <label htmlFor="email-input" style={styles.label}>Email</label>
           <input
+            id="email-input"
             placeholder="Email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             style={styles.input}
           />
+          <label htmlFor="password-input" style={styles.label}>Password</label>
           <input
+            id="password-input"
             placeholder="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={styles.input}
           />
-          {error && <p style={styles.error}>{error}</p>}
+          {error && <p style={styles.error} role="alert">{error}</p>}
           <button type="submit" style={styles.btn}>
             {isRegister ? 'Register' : 'Login'}
           </button>
         </form>
         <p style={styles.toggle}>
           {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <span onClick={() => { setIsRegister(!isRegister); setError('') }} style={styles.link}>
+          <span onClick={() => { setIsRegister(!isRegister); setError('') }} style={styles.link} role="button" tabIndex={0}>
             {isRegister ? 'Login' : 'Register'}
           </span>
         </p>
@@ -77,4 +85,5 @@ const styles: Record<string, React.CSSProperties> = {
   error: { color: '#f87171', fontSize: 13, margin: 0, textAlign: 'center' },
   toggle: { marginTop: 20, fontSize: 13, textAlign: 'center', color: '#94a3b8' },
   link: { color: '#f43f5e', cursor: 'pointer', fontWeight: 600 },
+  label: { fontSize: 13, fontWeight: 500, color: '#94a3b8' },
 }
